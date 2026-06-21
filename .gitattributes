@@ -1,7 +1,5 @@
-<<<<<<< HEAD
+# Auto-detect text files and normalize line endings to LF in the repo.
+* text=auto
+
 # Keep shell scripts LF-only so they run on the Linux VPS even when committed from Windows.
 *.sh text eol=lf
-=======
-# Auto detect text files and perform LF normalization
-* text=auto
->>>>>>> 0aed21ea7ed6b51e58d767c5de98eb183a4519c4
