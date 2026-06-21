@@ -20,7 +20,7 @@ export default function ProjectCard({
   const indexLabel = String(order).padStart(2, "0");
 
   return (
-    <article className="group">
+    <a href={`/work/${project.slug}`} className="group block">
       {project.image ? (
         <div className={`${ratioClass} overflow-hidden border border-hairline`}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -79,6 +79,6 @@ export default function ProjectCard({
           {project.year != null && ` · ${project.year}`}
         </p>
       </div>
-    </article>
+    </a>
   );
 }

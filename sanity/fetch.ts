@@ -38,6 +38,51 @@ export async function getProjects(): Promise<Project[]> {
   }));
 }
 
+export async function getProjectSlugs(): Promise<string[]> {
+  return client.fetch<string[]>(
+    `*[_type == "project" && defined(slug.current)].slug.current`,
+  );
+}
+
+export async function getProject(slug: string): Promise<Project | null> {
+  const d = await client.fetch<{
+    _id: string;
+    client: string;
+    slug?: string;
+    sector: string;
+    services?: string[];
+    layout?: string;
+    year?: number;
+    image?: ImageRef;
+    intro?: string;
+    outcome?: string;
+    gallery?: ImageRef[];
+  } | null>(
+    `*[_type == "project" && slug.current == $slug][0]{
+      _id, client, "slug": slug.current, sector, services, layout, year, image, intro, outcome, gallery
+    }`,
+    { slug },
+  );
+  if (!d) return null;
+  return {
+    slug: d.slug || d._id,
+    client: d.client,
+    sector: d.sector,
+    year: d.year ?? undefined,
+    services: d.services ?? [],
+    layout: d.layout === "full" ? "full" : "half",
+    tone: 1,
+    image: d.image
+      ? urlFor(d.image).width(2400).fit("max").auto("format").url()
+      : undefined,
+    intro: d.intro ?? undefined,
+    outcome: d.outcome ?? undefined,
+    gallery: (d.gallery ?? []).map((g) =>
+      urlFor(g).width(2000).fit("max").auto("format").url(),
+    ),
+  };
+}
+
 export async function getLogoMarks(): Promise<LogoMark[]> {
   const docs = await client.fetch<
     Array<{ _id: string; client: string; year?: number; mark?: ImageRef }>

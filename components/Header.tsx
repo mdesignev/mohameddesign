@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 const SITE_NAME = "Mohamed Design";
 
 const links = [
-  { label: "Work", href: "#work" },
-  { label: "Archive", href: "#archive" },
-  { label: "About", href: "#about" },
-  { label: "Contact", href: "#contact" },
+  { label: "Work", href: "/#work" },
+  { label: "Archive", href: "/#archive" },
+  { label: "About", href: "/#about" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export default function Header() {
@@ -29,7 +29,7 @@ export default function Header() {
     >
       <div className="container-site flex h-16 items-center justify-between md:h-[72px]">
         <a
-          href="#top"
+          href="/"
           aria-label={SITE_NAME}
           className="flex items-center gap-2.5 whitespace-nowrap font-display text-base font-medium tracking-tight md:text-lg"
         >

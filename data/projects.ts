@@ -13,4 +13,8 @@ export type Project = {
   tone: 1 | 2 | 3;
   /** Resolved image URL from Sanity; placeholder shown when absent. */
   image?: string;
+  /** Case-study detail — only populated on the /work/[slug] page. */
+  intro?: string;
+  gallery?: string[];
+  outcome?: string;
 };
