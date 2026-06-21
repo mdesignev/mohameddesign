@@ -1,10 +1,9 @@
-const EMAIL = "hello@mohameddesign.com";
+const EMAIL = "me@mohameddesign.com";
 const SITE_NAME = "Mohamed Design";
 
 const SOCIAL = [
-  { label: "Instagram", href: "https://instagram.com/mohameddesign" },
-  { label: "Behance", href: "https://behance.net/mohameddesign" },
-  { label: "LinkedIn", href: "https://linkedin.com/in/mohameddesign" },
+  { label: "Instagram", href: "https://instagram.com/mdesignev" },
+  { label: "Behance", href: "https://behance.net/mdesignev" },
 ];
 
 /** The single, subtle personal signature — footer only. Set to null to drop the Arabic. */
@@ -13,26 +12,13 @@ const ARABIC_SIGNATURE: string | null = "محمد";
 function Monogram({ className = "" }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 32 32"
-      fill="none"
+      viewBox="0 0 150 150"
+      fill="currentColor"
       aria-hidden="true"
       className={className}
     >
-      <rect
-        x="1"
-        y="1"
-        width="30"
-        height="30"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M8 23V9l8 10 8-10v14"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="square"
-        strokeLinejoin="round"
-      />
+      <path d="M76.8,7.25v135.51c38.35,0,69.43-30.33,69.43-67.75S115.15,7.25,76.8,7.25Z" />
+      <polygon points="3.76 27.01 3.76 120.88 52.99 120.88 52.99 27.01 28.38 63.16 3.76 27.01" />
     </svg>
   );
 }

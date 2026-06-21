@@ -27,7 +27,7 @@ export default function BoardCard({
             <span aria-hidden="true" className="h-1.5 w-1.5 bg-accent" />
             {indexLabel}
           </span>
-          <span>{board.year}</span>
+          {board.year != null && <span>{board.year}</span>}
         </div>
         <h3 className="mt-2 font-display text-2xl font-medium leading-[1.05] tracking-[-0.01em] transition-colors duration-200 group-hover:text-accent">
           {board.client}
@@ -111,7 +111,8 @@ export default function BoardCard({
       </div>
 
       <figcaption className="sr-only">
-        {board.client}, identity system, {board.year}
+        {board.client}, identity system
+        {board.year != null ? `, ${board.year}` : ""}
       </figcaption>
     </figure>
   );

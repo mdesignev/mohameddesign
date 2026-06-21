@@ -75,7 +75,8 @@ export default function ProjectCard({
           </span>
         </div>
         <p className="mt-2.5 font-meta text-[0.75rem] uppercase tracking-[0.08em] text-stone">
-          {project.sector} · {project.year}
+          {project.sector}
+          {project.year != null && ` · ${project.year}`}
         </p>
       </div>
     </article>

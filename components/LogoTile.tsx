@@ -19,9 +19,11 @@ export default function LogoTile({
         >
           {indexLabel}
         </span>
-        <span aria-hidden="true" className="font-meta text-[11px] text-stone/60">
-          {mark.year}
-        </span>
+        {mark.year != null && (
+          <span aria-hidden="true" className="font-meta text-[11px] text-stone/60">
+            {mark.year}
+          </span>
+        )}
       </div>
       <div className="flex flex-1 items-center justify-center">
         {mark.src ? (
@@ -50,7 +52,8 @@ export default function LogoTile({
         </span>
       </div>
       <span className="sr-only">
-        {mark.client}, {mark.year}
+        {mark.client}
+        {mark.year != null ? `, ${mark.year}` : ""}
       </span>
     </li>
   );
