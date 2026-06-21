@@ -1,8 +1,9 @@
 import BoardCard from "@/components/BoardCard";
 import SectionShell from "@/components/SectionShell";
-import { brandBoards } from "@/data/brandBoards";
+import { getBrandBoards } from "@/sanity/fetch";
 
-export default function BrandBoards() {
+export default async function BrandBoards() {
+  const brandBoards = await getBrandBoards();
   return (
     <SectionShell
       id="boards"

@@ -1,6 +1,7 @@
 import ProjectCard from "@/components/ProjectCard";
 import SectionShell from "@/components/SectionShell";
-import { projects, type Project } from "@/data/projects";
+import type { Project } from "@/data/projects";
+import { getProjects } from "@/sanity/fetch";
 
 type Row = { type: "full" | "pair"; items: Project[] };
 
@@ -26,7 +27,8 @@ function buildRows(items: Project[]): Row[] {
   return rows;
 }
 
-export default function SelectedWork() {
+export default async function SelectedWork() {
+  const projects = await getProjects();
   const rows = buildRows(projects);
   const orderOf = (project: Project) => projects.indexOf(project) + 1;
 

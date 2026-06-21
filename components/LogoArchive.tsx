@@ -1,8 +1,9 @@
 import LogoTile from "@/components/LogoTile";
 import SectionShell from "@/components/SectionShell";
-import { logoMarks } from "@/data/logoMarks";
+import { getLogoMarks } from "@/sanity/fetch";
 
-export default function LogoArchive() {
+export default async function LogoArchive() {
+  const logoMarks = await getLogoMarks();
   return (
     <SectionShell
       id="archive"

@@ -1,6 +1,4 @@
-import { brandBoards } from "@/data/brandBoards";
-import { logoMarks } from "@/data/logoMarks";
-import { projects } from "@/data/projects";
+import { getCounts } from "@/sanity/fetch";
 
 const EYEBROW = "Mohamed Design";
 const HEADLINE = "Logo & Brand Identity Systems";
@@ -9,7 +7,8 @@ const SUPPORTING_LINE =
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-export default function Hero() {
+export default async function Hero() {
+  const counts = await getCounts();
   return (
     <section id="top">
       <div className="container-site flex min-h-[70svh] flex-col justify-center pt-16 md:pt-20">
@@ -57,8 +56,8 @@ export default function Hero() {
               Index
             </p>
             <p className="mt-1 text-sm">
-              {pad(projects.length)} projects · {pad(logoMarks.length)} marks ·{" "}
-              {pad(brandBoards.length)} boards
+              {pad(counts.projects)} projects · {pad(counts.marks)} marks ·{" "}
+              {pad(counts.boards)} boards
             </p>
           </div>
           <div className="py-4 sm:border-l sm:border-hairline sm:pl-6">

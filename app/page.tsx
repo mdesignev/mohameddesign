@@ -6,6 +6,9 @@ import Hero from "@/components/Hero";
 import LogoArchive from "@/components/LogoArchive";
 import SelectedWork from "@/components/SelectedWork";
 
+// ISR: rebuild the page at most every 60s so Sanity edits publish without a redeploy.
+export const revalidate = 60;
+
 export default function Home() {
   return (
     <>
