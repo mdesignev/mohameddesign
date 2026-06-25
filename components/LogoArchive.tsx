@@ -1,18 +1,17 @@
 import LogoTile from "@/components/LogoTile";
 import SectionShell from "@/components/SectionShell";
-import { getLogoMarks } from "@/sanity/fetch";
+import type { LogoMark } from "@/data/logoMarks";
 
-export default async function LogoArchive() {
-  const logoMarks = await getLogoMarks();
+export default function LogoArchive({ marks }: { marks: LogoMark[] }) {
   return (
     <SectionShell
       id="archive"
       index="02"
-      title="Logo archive"
-      note="Full archive soon"
+      title="Logo Archive"
+      note="Marks shipped"
     >
-      <ul className="grid grid-cols-3 gap-px border border-hairline bg-hairline sm:grid-cols-4 lg:grid-cols-6">
-        {logoMarks.slice(0, 12).map((mark, i) => (
+      <ul className="grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-line bg-line sm:grid-cols-4 lg:grid-cols-6">
+        {marks.slice(0, 12).map((mark, i) => (
           <LogoTile key={mark.id} mark={mark} order={i + 1} />
         ))}
       </ul>

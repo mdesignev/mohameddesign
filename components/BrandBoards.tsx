@@ -1,19 +1,21 @@
 import BoardCard from "@/components/BoardCard";
 import SectionShell from "@/components/SectionShell";
-import { getBrandBoards } from "@/sanity/fetch";
+import Reveal from "@/components/motion/Reveal";
+import type { BrandBoard } from "@/data/brandBoards";
 
-export default async function BrandBoards() {
-  const brandBoards = await getBrandBoards();
+export default function BrandBoards({ boards }: { boards: BrandBoard[] }) {
   return (
     <SectionShell
       id="boards"
       index="04"
-      title="Brand boards"
+      title="Brand Boards"
       note="One-page identity summaries"
     >
-      <div className="grid gap-10 sm:grid-cols-3 sm:gap-8">
-        {brandBoards.slice(0, 3).map((board, i) => (
-          <BoardCard key={board.id} board={board} toneIndex={i} order={i + 1} />
+      <div className="grid gap-8 sm:grid-cols-3">
+        {boards.slice(0, 3).map((board, i) => (
+          <Reveal key={board.id} delay={i * 0.1}>
+            <BoardCard board={board} toneIndex={i} order={i + 1} />
+          </Reveal>
         ))}
       </div>
     </SectionShell>

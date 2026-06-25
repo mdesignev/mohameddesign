@@ -1,10 +1,7 @@
 import type { BrandBoard } from "@/data/brandBoards";
 
-const toneClasses = ["bg-tone-1", "bg-tone-2", "bg-tone-3"];
-
 export default function BoardCard({
   board,
-  toneIndex,
   order,
 }: {
   board: BrandBoard;
@@ -13,84 +10,79 @@ export default function BoardCard({
   order: number;
 }) {
   const indexLabel = String(order).padStart(2, "0");
-  const tone = toneClasses[toneIndex % 3];
 
-  // Both modes share the frame, top bar, and footer meta strip. Placeholder
-  // mode fills the main field with a glyph + system modules; image mode fills
-  // it with the finished board, kept as a framed preview.
   return (
-    <figure className="group flex aspect-[4/5] flex-col border border-hairline bg-paper">
-      {/* 1. Top bar — order + year metadata, client name as the main title. */}
-      <div className="border-b border-hairline px-3.5 pb-3 pt-3">
-        <div className="flex items-center justify-between font-meta text-[11px] text-stone">
+    <figure className="group flex aspect-[4/5] flex-col overflow-hidden rounded-sm border border-line bg-surface transition-colors duration-300 hover:border-stone/40">
+      {/* Top bar — index + year, client name as the title. */}
+      <div className="border-b border-line px-4 pb-3 pt-3.5">
+        <div className="flex items-center justify-between font-meta text-[11px] text-faint">
           <span className="flex items-center gap-1.5">
             <span aria-hidden="true" className="h-1.5 w-1.5 bg-accent" />
             {indexLabel}
           </span>
           {board.year != null && <span>{board.year}</span>}
         </div>
-        <h3 className="mt-2 font-display text-2xl font-medium leading-[1.05] tracking-[-0.01em] transition-colors duration-200 group-hover:text-accent">
+        <h3 className="mt-2 font-display text-2xl font-medium leading-[1.05] tracking-[-0.01em] text-paper transition-colors duration-200 group-hover:text-accent-soft">
           {board.client}
         </h3>
       </div>
 
       {board.src ? (
-        // 2a. Main field — finished board, contained on a matte so the whole
-        // composition is preserved; fixed-height box keeps it ratio-safe.
-        <div className={`flex flex-1 items-center justify-center overflow-hidden p-3 ${tone}`}>
+        <div className="flex flex-1 items-center justify-center overflow-hidden bg-elevated p-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={board.src}
             alt={`${board.client} brand board`}
             loading="lazy"
-            className="h-full w-full object-contain motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:group-hover:scale-[1.02]"
+            decoding="async"
+            className="h-full w-full object-contain motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:group-hover:scale-[1.03]"
           />
         </div>
       ) : (
         <>
-          {/* 2b. Main field — large mark preview, strong whitespace. */}
-          <div className={`flex flex-1 items-center justify-center overflow-hidden ${tone}`}>
+          <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-elevated">
+            <span className="glow left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 opacity-[0.18]" />
             <span
               aria-hidden="true"
-              className="font-display text-6xl font-medium text-ink/20 md:text-7xl motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:group-hover:scale-[1.02]"
+              className="relative font-display text-6xl font-medium text-paper/15 motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:group-hover:scale-105 md:text-7xl"
             >
               {board.glyph}
             </span>
           </div>
 
-          {/* 3 + 4. System modules — MARK / TYPE / COLOR, with the palette chips. */}
-          <div className="grid grid-cols-3 gap-px border-t border-hairline bg-hairline">
-            <div className="flex flex-col gap-2 bg-paper px-3 py-2.5">
-              <span className="font-meta text-[10px] uppercase tracking-[0.1em] text-stone">
+          {/* System modules — MARK / TYPE / COLOR. */}
+          <div className="grid grid-cols-3 gap-px border-t border-line bg-line">
+            <div className="flex flex-col gap-2 bg-surface px-3 py-2.5">
+              <span className="font-meta text-[10px] uppercase tracking-[0.1em] text-faint">
                 Mark
               </span>
               <span
                 aria-hidden="true"
-                className="font-display text-base font-medium leading-none"
+                className="font-display text-base font-medium leading-none text-paper"
               >
                 {board.glyph}
               </span>
             </div>
-            <div className="flex flex-col gap-2 bg-paper px-3 py-2.5">
-              <span className="font-meta text-[10px] uppercase tracking-[0.1em] text-stone">
+            <div className="flex flex-col gap-2 bg-surface px-3 py-2.5">
+              <span className="font-meta text-[10px] uppercase tracking-[0.1em] text-faint">
                 Type
               </span>
               <span
                 aria-hidden="true"
-                className="font-display text-base font-medium leading-none"
+                className="font-display text-base font-medium leading-none text-paper"
               >
                 Aa
               </span>
             </div>
-            <div className="flex flex-col gap-2 bg-paper px-3 py-2.5">
-              <span className="font-meta text-[10px] uppercase tracking-[0.1em] text-stone">
+            <div className="flex flex-col gap-2 bg-surface px-3 py-2.5">
+              <span className="font-meta text-[10px] uppercase tracking-[0.1em] text-faint">
                 Color
               </span>
               <div className="flex gap-1" aria-hidden="true">
                 {board.palette.map((color) => (
                   <span
                     key={color}
-                    className="h-4 w-4 ring-1 ring-inset ring-ink/10"
+                    className="h-4 w-4 rounded-[1px] ring-1 ring-inset ring-white/10"
                     style={{ background: color }}
                   />
                 ))}
@@ -100,9 +92,9 @@ export default function BoardCard({
         </>
       )}
 
-      {/* 5. Footer meta strip. */}
-      <div className="flex items-center justify-between border-t border-hairline px-3.5 py-2">
-        <span className="font-meta text-[10px] uppercase tracking-[0.12em] text-stone">
+      {/* Footer meta strip. */}
+      <div className="flex items-center justify-between border-t border-line px-4 py-2.5">
+        <span className="font-meta text-[10px] uppercase tracking-[0.12em] text-faint">
           Identity system
         </span>
         <span className="font-meta text-[10px] uppercase tracking-[0.12em] text-stone/70">

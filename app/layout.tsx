@@ -1,5 +1,8 @@
-import type { Metadata } from "next";
-import { IBM_Plex_Mono, Inter, Space_Grotesk } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Hanken_Grotesk, IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
+import Cursor from "@/components/motion/Cursor";
+import Loader from "@/components/motion/Loader";
+import SmoothScroll from "@/components/motion/SmoothScroll";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -8,9 +11,9 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
-const inter = Inter({
+const hanken = Hanken_Grotesk({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-hanken",
   display: "swap",
 });
 
@@ -47,6 +50,11 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#0a0a0b",
+  colorScheme: "dark",
+};
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
@@ -70,14 +78,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${inter.variable} ${plexMono.variable}`}
+      className={`${spaceGrotesk.variable} ${hanken.variable} ${plexMono.variable}`}
     >
       <body>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {children}
+        <Loader />
+        <Cursor />
+        <div className="grain" aria-hidden="true" />
+        <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
   );
