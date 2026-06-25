@@ -1,41 +1,128 @@
 @import "tailwindcss";
 
+/* ------------------------------------------------------------------ *
+ * MDESIGN — "Studio in the dark"
+ * Near-monochrome dark editorial system. Color appears only as a
+ * restrained, slowly-cycling micro-glow (muted amber -> blue -> oxide
+ * red) — atmospheric polish you feel before you notice it.
+ * ------------------------------------------------------------------ */
+
 @theme {
-  --color-paper: #f2f1ec;
-  --color-ink: #111111;
-  --color-stone: #6a6a6a;
-  --color-hairline: #d9d9d2;
-  --color-accent: #2957ff;
-  --color-accent-soft: #7b95ff;
-  --color-tone-1: #e9e8e0;
-  --color-tone-2: #e1e0d7;
-  --color-tone-3: #d8d7cc;
+  --color-base: #0a0a0b; /* page canvas */
+  --color-surface: #141416; /* cards, sections, fields */
+  --color-elevated: #1c1c20; /* raised placeholders */
+  --color-paper: #f2f1ec; /* primary text — luminous off-white */
+  --color-stone: #9a9aa0; /* muted text (AA on base) */
+  --color-faint: #6a6a72; /* faintest text + system marks */
+  --color-line: #26262b; /* hairline borders on dark */
+  --color-line-soft: #1b1b1f; /* quieter divider */
+  --color-accent: #cfa85a; /* muted accent (animated micro-glow) */
+  --color-accent-soft: #d8b87a; /* lighter muted accent for details */
 }
 
 @theme inline {
   --font-display: var(--font-space-grotesk), system-ui, sans-serif;
-  --font-body: var(--font-inter), system-ui, sans-serif;
+  --font-body: var(--font-hanken), system-ui, sans-serif;
   --font-meta: var(--font-plex-mono), ui-monospace, monospace;
 }
 
+/* Registered so the accent can interpolate smoothly between hues. */
+@property --color-accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #cfa85a;
+}
+@property --color-accent-soft {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #d8b87a;
+}
+
+/* Muted, premium — atmospheric color, never pure/saturated. */
+@keyframes accent-cycle {
+  0% {
+    --color-accent: #cfa85a; /* warm muted amber */
+  }
+  33% {
+    --color-accent: #456c8c; /* deep muted blue */
+  }
+  66% {
+    --color-accent: #a64235; /* oxide muted red */
+  }
+  100% {
+    --color-accent: #cfa85a;
+  }
+}
+@keyframes accent-soft-cycle {
+  0% {
+    --color-accent-soft: #d8b87a;
+  }
+  33% {
+    --color-accent-soft: #6e93b5;
+  }
+  66% {
+    --color-accent-soft: #be6a5e;
+  }
+  100% {
+    --color-accent-soft: #d8b87a;
+  }
+}
+
 @layer base {
+  :root {
+    --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
   html {
-    scroll-behavior: smooth;
+    background: var(--color-base);
+    color-scheme: dark;
+    /* Slow, soft loop — atmospheric, not an effect. */
+    animation:
+      accent-cycle 20s linear infinite,
+      accent-soft-cycle 20s linear infinite;
   }
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
+      animation: none;
+      /* Freeze on the muted amber. */
+      --color-accent: #cfa85a;
+      --color-accent-soft: #d8b87a;
     }
   }
+
   body {
-    background: var(--color-paper);
-    color: var(--color-ink);
+    background: var(--color-base);
+    color: var(--color-paper);
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
   }
+
   ::selection {
     background: var(--color-accent);
-    color: var(--color-paper);
+    color: #0a0a0b;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent-soft);
+    outline-offset: 3px;
+  }
+
+  /* Lenis smooth-scroll plumbing */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
   }
 }
 
@@ -48,7 +135,7 @@
   }
   @media (min-width: 768px) {
     .container-site {
-      padding-inline: 32px;
+      padding-inline: 40px;
     }
   }
   @media (min-width: 1200px) {
@@ -60,45 +147,52 @@
   .meta-label {
     font-family: var(--font-meta);
     font-size: 0.8125rem;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-stone);
   }
 
+  /* Buttons — hover reads as a soft accent aura, never a colour fill. */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
     font-family: var(--font-meta);
     font-size: 0.8125rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    padding: 0.875rem 1.75rem;
+    padding: 0.9rem 1.6rem;
     border: 1px solid transparent;
+    border-radius: 2px;
     transition:
-      background-color 0.2s ease,
-      color 0.2s ease,
-      border-color 0.2s ease;
+      background-color 0.25s ease,
+      color 0.25s ease,
+      border-color 0.25s ease,
+      box-shadow 0.4s ease;
   }
   .btn-solid {
-    background: var(--color-ink);
-    color: var(--color-paper);
+    background: var(--color-paper);
+    color: #0a0a0b;
   }
   .btn-solid:hover,
   .btn-solid:focus-visible {
-    background: var(--color-accent);
-    color: #ffffff;
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-accent) 45%, transparent),
+      0 14px 50px -16px color-mix(in srgb, var(--color-accent) 55%, transparent);
   }
   .btn-outline {
-    border-color: var(--color-ink);
-    color: var(--color-ink);
+    border-color: var(--color-line);
+    color: var(--color-paper);
   }
   .btn-outline:hover,
   .btn-outline:focus-visible {
-    border-color: var(--color-accent);
-    color: var(--color-accent);
+    border-color: color-mix(in srgb, var(--color-accent-soft) 60%, var(--color-line));
+    box-shadow: 0 14px 50px -18px color-mix(in srgb, var(--color-accent) 45%, transparent);
   }
 
+  /* Inline links — text stays off-white; the accent lives in the rule. */
   .link-underline {
     position: relative;
   }
@@ -109,10 +203,10 @@
     bottom: -2px;
     height: 1px;
     width: 100%;
-    background: currentColor;
+    background: var(--color-accent-soft);
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 0.3s ease;
+    transition: transform 0.4s var(--ease-out-quint);
   }
   .link-underline:hover::after,
   .link-underline:focus-visible::after {
@@ -124,24 +218,40 @@
     }
   }
 
-  .hero-fade {
-    opacity: 0;
-    animation: hero-fade 0.7s ease-out forwards;
+  /* Micro-glow light source — soft, low-opacity, follows the cycling
+     accent. Sizing/opacity are set per-instance and kept restrained. */
+  .glow {
+    position: absolute;
+    border-radius: 9999px;
+    background: radial-gradient(
+      closest-side,
+      color-mix(in srgb, var(--color-accent) 50%, transparent),
+      color-mix(in srgb, var(--color-accent) 10%, transparent) 62%,
+      transparent 100%
+    );
+    filter: blur(56px);
+    pointer-events: none;
   }
-  @keyframes hero-fade {
-    from {
-      opacity: 0;
-      transform: translateY(6px);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
+
+  .rule-top {
+    border-top: 1px solid var(--color-line);
   }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-fade {
-      animation: none;
-      opacity: 1;
-    }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Honor reduced motion globally for any element opting in via this hook. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
