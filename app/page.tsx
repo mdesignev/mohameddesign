@@ -6,21 +6,19 @@ import Hero from "@/components/Hero";
 import LogoArchive from "@/components/LogoArchive";
 import SelectedWork from "@/components/SelectedWork";
 import Marquee from "@/components/motion/Marquee";
-import { getBrandBoards, getLogoMarks, getProjects } from "@/sanity/fetch";
+import {
+  getBrandBoards,
+  getHomepage,
+  getLogoMarks,
+  getProjects,
+} from "@/sanity/fetch";
 
 // ISR: rebuild the page at most every 60s so Sanity edits publish without a redeploy.
 export const revalidate = 60;
 
-const MARQUEE = [
-  "Logo Design",
-  "Brand Identity",
-  "Brand Boards",
-  "Art Direction",
-  "Visual Systems",
-];
-
 export default async function Home() {
-  const [projects, marks, boards] = await Promise.all([
+  const [content, projects, marks, boards] = await Promise.all([
+    getHomepage(),
     getProjects(),
     getLogoMarks(),
     getBrandBoards(),
@@ -36,16 +34,16 @@ export default async function Home() {
       </a>
       <Header />
       <main id="main">
-        <Hero />
+        <Hero content={content.hero} />
         <section
           aria-label="Services"
           className="border-y border-line bg-surface/40 py-6 md:py-8"
         >
-          <Marquee items={MARQUEE} />
+          <Marquee items={content.marquee} />
         </section>
         <SelectedWork projects={projects} />
         <LogoArchive marks={marks} />
-        <AboutTeaser />
+        <AboutTeaser content={content.about} />
         <BrandBoards boards={boards} />
       </main>
       <Footer />

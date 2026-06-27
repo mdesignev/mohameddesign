@@ -8,11 +8,7 @@ import {
   useTransform,
   type Variants,
 } from "framer-motion";
-
-const EYEBROW = "MDESIGNEV";
-const HEADLINE = ["Logo & Brand", "Identity Systems"];
-const SUPPORTING_LINE =
-  "Sharp, modern identity work built for brands that need clarity, structure, and presence.";
+import type { HomepageContent } from "@/data/homepage";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -64,7 +60,11 @@ function MonogramDraw({ reduce }: { reduce: boolean | null }) {
   );
 }
 
-export default function Hero() {
+export default function Hero({
+  content,
+}: {
+  content: HomepageContent["hero"];
+}) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
@@ -142,12 +142,13 @@ export default function Hero() {
         >
           <span aria-hidden="true" className="h-2 w-2 bg-accent" />
           <span>
-            {EYEBROW} <span className="text-faint">. Egypt</span>
+            {content.eyebrowBrand}{" "}
+            <span className="text-faint">. {content.eyebrowLocation}</span>
           </span>
         </motion.p>
 
         <h1 className="mt-7 max-w-[15ch] font-display text-[clamp(2.5rem,8.4vw,8rem)] font-medium leading-[1.0] tracking-[-0.02em]">
-          {HEADLINE.map((text, i) => (
+          {content.headlineLines.map((text, i) => (
             <span key={text} className="block overflow-hidden pb-[0.09em]">
               <motion.span
                 className="block"
@@ -169,7 +170,7 @@ export default function Hero() {
           initial="hidden"
           animate="show"
         >
-          {SUPPORTING_LINE}
+          {content.supportingLine}
         </motion.p>
 
         <motion.div
@@ -198,9 +199,7 @@ export default function Hero() {
             <dt className="font-meta text-[11px] uppercase tracking-[0.1em] text-faint">
               Services
             </dt>
-            <dd className="mt-1.5 text-sm text-paper">
-              Logo · Identity · Brand Boards
-            </dd>
+            <dd className="mt-1.5 text-sm text-paper">{content.services}</dd>
           </div>
           <div className="border-t border-line py-4 sm:border-l sm:border-t-0 sm:border-line sm:pl-8">
             <dt className="font-meta text-[11px] uppercase tracking-[0.1em] text-faint">
@@ -211,7 +210,7 @@ export default function Hero() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75 motion-reduce:hidden" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
               </span>
-              Available for work
+              {content.status}
             </dd>
           </div>
         </motion.dl>

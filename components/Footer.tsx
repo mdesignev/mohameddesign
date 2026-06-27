@@ -1,20 +1,5 @@
 import Reveal from "@/components/motion/Reveal";
-
-const EMAIL = "me@mohameddesign.com";
-const SITE_NAME = "Mohamed Design";
-
-const PHONE_DISPLAY = "+20 100 404 4133";
-const PHONE_TEL = "+201004044133";
-const WHATSAPP_URL = "https://wa.me/201004044133";
-
-const SOCIAL = [
-  { label: "WhatsApp", href: WHATSAPP_URL },
-  { label: "Instagram", href: "https://instagram.com/mdesignev" },
-  { label: "Behance", href: "https://behance.net/mdesignev" },
-];
-
-/** The single, subtle personal signature — footer only. Set to null to drop the Arabic. */
-const ARABIC_SIGNATURE: string | null = "محمد";
+import { getHomepage } from "@/sanity/fetch";
 
 function Monogram({ className = "" }: { className?: string }) {
   return (
@@ -30,8 +15,15 @@ function Monogram({ className = "" }: { className?: string }) {
   );
 }
 
-export default function Footer() {
+export default async function Footer() {
+  const { contact: c } = await getHomepage();
   const year = new Date().getFullYear();
+
+  const social = [
+    { label: "WhatsApp", href: c.whatsappUrl },
+    { label: "Instagram", href: c.instagramUrl },
+    { label: "Behance", href: c.behanceUrl },
+  ];
 
   return (
     <footer id="contact" className="relative scroll-mt-24 overflow-hidden border-t border-line bg-base">
@@ -48,7 +40,7 @@ export default function Footer() {
 
         <Reveal delay={0.05}>
           <h2 className="mt-8 max-w-[14ch] font-display text-[clamp(2.5rem,7vw,6rem)] font-medium leading-[0.98] tracking-[-0.03em] text-paper">
-            Let&apos;s build your mark.
+            {c.headline}
           </h2>
         </Reveal>
 
@@ -59,11 +51,11 @@ export default function Footer() {
                 Email
               </p>
               <a
-                href={`mailto:${EMAIL}`}
+                href={`mailto:${c.email}`}
                 data-cursor
                 className="link-underline mt-2 inline-block font-display text-lg text-paper md:text-2xl"
               >
-                {EMAIL}
+                {c.email}
               </a>
             </div>
             <div>
@@ -71,15 +63,15 @@ export default function Footer() {
                 Phone · WhatsApp
               </p>
               <a
-                href={`tel:${PHONE_TEL}`}
+                href={`tel:${c.phoneTel}`}
                 data-cursor
                 dir="ltr"
                 className="link-underline mt-2 inline-block font-display text-lg text-paper md:text-2xl"
               >
-                {PHONE_DISPLAY}
+                {c.phoneDisplay}
               </a>
               <a
-                href={WHATSAPP_URL}
+                href={c.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 data-cursor
@@ -88,7 +80,7 @@ export default function Footer() {
                 <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor" aria-hidden="true">
                   <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.8 14.16c-.24.68-1.42 1.32-1.96 1.36-.5.05-.97.24-3.27-.68-2.76-1.09-4.5-3.92-4.64-4.1-.13-.18-1.11-1.48-1.11-2.82 0-1.34.7-2 .95-2.27a1 1 0 0 1 .72-.34h.52c.17 0 .4-.06.61.47.24.58.81 2 .88 2.14.07.14.12.31.02.49-.27.55-.56.53-.76.91-.14.27-.31.42-.16.69.15.27.68 1.12 1.46 1.81 1 .89 1.85 1.17 2.12 1.31.27.14.42.12.58-.07.18-.21.66-.77.84-1.03.18-.27.36-.22.61-.13.24.09 1.55.73 1.81.86.27.13.45.2.51.31.07.11.07.62-.17 1.29Z" />
                 </svg>
-                <span dir="ltr">WhatsApp {PHONE_DISPLAY}</span>
+                <span dir="ltr">WhatsApp {c.phoneDisplay}</span>
               </a>
             </div>
           </div>
@@ -96,14 +88,13 @@ export default function Footer() {
 
         <Reveal delay={0.15}>
           <p className="mt-10 max-w-[52ch] text-sm leading-relaxed text-stone">
-            Logo design, brand identity, and brand boards — every project
-            delivered as professional, production-ready files.
+            {c.supportingLine}
           </p>
         </Reveal>
 
         <div className="mt-20 flex flex-col gap-4 border-t border-line pt-6 font-meta text-[0.8125rem] text-stone sm:flex-row sm:items-center sm:justify-between">
           <ul className="flex gap-6 uppercase tracking-[0.06em]">
-            {SOCIAL.map((item) => (
+            {social.map((item) => (
               <li key={item.label}>
                 <a
                   href={item.href}
@@ -118,12 +109,12 @@ export default function Footer() {
           <p className="flex items-center gap-2 text-faint">
             <Monogram className="h-4 w-4 text-paper/70" />
             <span>
-              {SITE_NAME}
-              {ARABIC_SIGNATURE && (
+              {c.siteName}
+              {c.arabicSignature && (
                 <>
                   {" — "}
                   <span lang="ar" dir="rtl">
-                    {ARABIC_SIGNATURE}
+                    {c.arabicSignature}
                   </span>
                 </>
               )}

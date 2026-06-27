@@ -1,4 +1,5 @@
 import type { BrandBoard } from "@/data/brandBoards";
+import type { HomepageContent } from "@/data/homepage";
 import type { LogoMark } from "@/data/logoMarks";
 import type { Project } from "@/data/projects";
 import { client } from "./client";
@@ -145,4 +146,117 @@ export async function getBrandBoards(): Promise<BrandBoard[]> {
         : undefined,
     };
   });
+}
+
+// Current site copy as a safety net — if the Sanity homepage doc is
+// missing/empty, the site renders these instead of going blank.
+const HOMEPAGE_DEFAULTS: HomepageContent = {
+  hero: {
+    eyebrowBrand: "MDESIGNEV",
+    eyebrowLocation: "Egypt",
+    headlineLines: ["Logo & Brand", "Identity Systems"],
+    supportingLine:
+      "Sharp, modern identity work built for brands that need clarity, structure, and presence.",
+    services: "Logo · Identity · Brand Boards",
+    status: "Available for work",
+  },
+  marquee: [
+    "Logo Design",
+    "Brand Identity",
+    "Brand Boards",
+    "Art Direction",
+    "Visual Systems",
+  ],
+  about: {
+    bio: "Mohamed Design creates logo and brand identity systems for businesses that need clear, distinctive, and professionally delivered visual assets.",
+    services: [
+      { name: "Logo design", desc: "Distinctive marks built to last decades, not seasons." },
+      { name: "Brand identity", desc: "Complete visual systems — typography, color, and clear usage rules." },
+      { name: "Brand boards", desc: "One-page identity summaries, ready to share with any team." },
+      { name: "Final delivery", desc: "Professional, production-ready files in every format you need." },
+    ],
+  },
+  contact: {
+    siteName: "Mohamed Design",
+    headline: "Let's build your mark.",
+    supportingLine:
+      "Logo design, brand identity, and brand boards — every project delivered as professional, production-ready files.",
+    email: "me@mohameddesign.com",
+    phoneDisplay: "+20 100 404 4133",
+    phoneTel: "+201004044133",
+    whatsappUrl: "https://wa.me/201004044133",
+    instagramUrl: "https://instagram.com/mdesignev",
+    behanceUrl: "https://behance.net/mdesignev",
+    arabicSignature: "محمد",
+  },
+};
+
+export async function getHomepage(): Promise<HomepageContent> {
+  const d = await client.fetch<{
+    heroEyebrowBrand?: string;
+    heroEyebrowLocation?: string;
+    heroHeadlineLines?: string[];
+    heroSupportingLine?: string;
+    heroServices?: string;
+    heroStatus?: string;
+    marquee?: string[];
+    aboutBio?: string;
+    aboutServices?: { name?: string; desc?: string }[];
+    siteName?: string;
+    contactHeadline?: string;
+    contactSupportingLine?: string;
+    email?: string;
+    phoneDisplay?: string;
+    instagramUrl?: string;
+    behanceUrl?: string;
+    arabicSignature?: string;
+  } | null>(
+    `*[_type == "homepage"][0]{
+      heroEyebrowBrand, heroEyebrowLocation, heroHeadlineLines, heroSupportingLine,
+      heroServices, heroStatus, marquee, aboutBio, aboutServices[]{name, desc},
+      siteName, contactHeadline, contactSupportingLine, email, phoneDisplay,
+      instagramUrl, behanceUrl, arabicSignature
+    }`,
+    )
+    .catch(() => null); // Sanity unreachable → fall back to defaults below.
+
+  if (!d) return HOMEPAGE_DEFAULTS;
+
+  const dc = HOMEPAGE_DEFAULTS.contact;
+  const phoneDisplay = d.phoneDisplay || dc.phoneDisplay;
+  const digits = phoneDisplay.replace(/\D/g, "");
+
+  return {
+    hero: {
+      eyebrowBrand: d.heroEyebrowBrand || HOMEPAGE_DEFAULTS.hero.eyebrowBrand,
+      eyebrowLocation:
+        d.heroEyebrowLocation || HOMEPAGE_DEFAULTS.hero.eyebrowLocation,
+      headlineLines: d.heroHeadlineLines?.length
+        ? d.heroHeadlineLines
+        : HOMEPAGE_DEFAULTS.hero.headlineLines,
+      supportingLine:
+        d.heroSupportingLine || HOMEPAGE_DEFAULTS.hero.supportingLine,
+      services: d.heroServices || HOMEPAGE_DEFAULTS.hero.services,
+      status: d.heroStatus || HOMEPAGE_DEFAULTS.hero.status,
+    },
+    marquee: d.marquee?.length ? d.marquee : HOMEPAGE_DEFAULTS.marquee,
+    about: {
+      bio: d.aboutBio || HOMEPAGE_DEFAULTS.about.bio,
+      services: d.aboutServices?.length
+        ? d.aboutServices.map((s) => ({ name: s.name || "", desc: s.desc || "" }))
+        : HOMEPAGE_DEFAULTS.about.services,
+    },
+    contact: {
+      siteName: d.siteName || dc.siteName,
+      headline: d.contactHeadline || dc.headline,
+      supportingLine: d.contactSupportingLine || dc.supportingLine,
+      email: d.email || dc.email,
+      phoneDisplay,
+      phoneTel: "+" + digits,
+      whatsappUrl: "https://wa.me/" + digits,
+      instagramUrl: d.instagramUrl || dc.instagramUrl,
+      behanceUrl: d.behanceUrl || dc.behanceUrl,
+      arabicSignature: d.arabicSignature || null,
+    },
+  };
 }
